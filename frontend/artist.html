@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>ART GALLERY - Artist</title>
+    <link rel="stylesheet" href="/styles.css"/>
+  </head>
+  <body>
+    <div class="container">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo"></div>
+          <div>
+            <h1>Artist Profile</h1>
+            <p>Revenue and sales summary</p>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/">Home</a>
+          <a href="/exhibitions.html">Exhibitions</a>
+          <a href="/reports.html">Reports</a>
+        </nav>
+      </header>
+
+      <div id="artistCard" class="card" style="margin-top:16px;"></div>
+      <div id="salesCard" class="card" style="margin-top:16px;"></div>
+    </div>
+
+    <script src="/app.js"></script>
+    <script>
+      async function load(){
+        const id = getQueryParam("id");
+        if (!id) throw new Error("Missing artist id");
+
+        const artist = await apiFetch(`/artists/${encodeURIComponent(id)}`);
+        const sales = await apiFetch(`/artists/${encodeURIComponent(id)}/sales`);
+
+        document.getElementById("artistCard").innerHTML = `
+          <h3>${artist.name}</h3>
+          <p><span class="muted">Nationality:</span> ${artist.nationality}</p>
+          <p><span class="muted">Birth Year:</span> ${artist.birth_year}</p>
+          <div style="margin-top:12px; color:var(--muted);">
+            <h4 style="margin:0 0 8px; color: var(--gold2); font-size:14px;">Bio</h4>
+            <p style="margin:0; color:var(--muted); font-size:13px;">${artist.bio}</p>
+          </div>
+        `;
+
+        document.getElementById("salesCard").innerHTML = `
+          <h3 style="color:var(--gold2);">Sales Revenue (All Time)</h3>
+          <p><span class="muted">Sale Count:</span> ${sales.sale_count}</p>
+          <p><span class="muted">Total Revenue (Procedure):</span> ${formatMoney(sales.total_revenue)}</p>
+          <p><span class="muted">Total Revenue (Correlated):</span> ${formatMoney(sales.total_revenue_correlated)}</p>
+        `;
+      }
+
+      load().catch(console.error);
+    </script>
+  </body>
+</html>
+

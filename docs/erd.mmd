@@ -1,0 +1,23 @@
+erDiagram
+  ARTIST ||--o{ ARTWORK : "artist_id"
+  CATEGORY ||--o{ ARTWORK : "category_id"
+
+  ARTWORK ||--o{ ARTWORK_EXHIBITION : "artwork_id"
+  EXHIBITION ||--o{ ARTWORK_EXHIBITION : "exhibition_id"
+
+  CURATOR ||--o{ EXHIBITION : "curator_id"
+
+  VISITOR ||--o{ TICKET : "visitor_id"
+  EXHIBITION ||--o{ TICKET : "exhibition_id"
+
+  ARTWORK ||--o{ SALE : "artwork_id"
+  VISITOR ||--o{ SALE : "visitor_id"
+
+  TICKET ||--o{ TICKET_PURCHASE_LOG : "ticket_id"
+  SALE ||--o{ ARTWORK_SALE_LOG : "sale_id"
+
+  ADMINUSER {
+    int admin_id PK
+    string username
+  }
+

@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>ART GALLERY - Admin</title>
+    <link rel="stylesheet" href="/styles.css"/>
+  </head>
+  <body>
+    <div class="container">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo logo-admin" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img" focusable="false">
+              <path d="M4 20h16v2H2V4h2v16zm3-2h10l-6-6 3-3 3 3 4-4 3 3-6 7z"/>
+              <path d="M7 4h2v2H7V4zm4 0h2v2h-2V4zm4 0h2v2h-2V4z" opacity="0.85"/>
+            </svg>
+          </div>
+          <div>
+            <h1>Admin Dashboard</h1>
+            <p>Manage artists, artworks, exhibitions</p>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/">Home</a>
+          <a href="/reports.html">Reports</a>
+          <a href="/exhibitions.html">Exhibitions</a>
+        </nav>
+      </header>
+
+      <div id="authCard" class="card">
+        <h3>Admin Login</h3>
+        <p class="muted">Use your username/password to access protected endpoints.</p>
+        <div class="row">
+          <div class="col">
+            <label>Username</label>
+            <input id="username" type="text" placeholder="admin" />
+          </div>
+          <div class="col">
+            <label>Password</label>
+            <input id="password" type="password" placeholder="admin123" />
+          </div>
+        </div>
+        <div class="row" style="margin-top:12px;">
+          <div class="col" style="max-width:240px;">
+            <button class="btn primary" id="loginBtn" style="width:100%;">Login</button>
+          </div>
+          <div class="col">
+            <button class="btn" id="logoutBtn" style="display:none; width:100%;">Logout</button>
+          </div>
+        </div>
+        <p id="authMsg" style="margin-top:12px;"></p>
+      </div>
+
+      <div id="adminUI" style="display:none;">
+        <h2 class="section-title">Manage Artists</h2>
+        <div class="card">
+          <h3 style="color:var(--gold2);">Add Artist</h3>
+          <div class="row">
+            <div class="col"><label>Name</label><input id="addArtistName" type="text"/></div>
+            <div class="col"><label>Nationality</label><input id="addArtistNationality" type="text"/></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Birth Year</label><input id="addArtistBirthYear" type="number"/></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Bio</label><textarea id="addArtistBio"></textarea></div>
+          </div>
+          <button class="btn primary" id="addArtistBtn" style="margin-top:10px;">Add</button>
+        </div>
+
+        <div class="card" style="margin-top:16px;">
+          <h3 style="color:var(--gold2);">Edit Artist</h3>
+          <div class="row">
+            <div class="col" style="max-width:220px;"><label>Artist ID</label><input id="editArtistId" type="number"/></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Name (optional)</label><input id="editArtistName" type="text"/></div>
+            <div class="col"><label>Nationality (optional)</label><input id="editArtistNationality" type="text"/></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Birth Year (optional)</label><input id="editArtistBirthYear" type="number"/></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Bio (optional)</label><textarea id="editArtistBio"></textarea></div>
+          </div>
+          <button class="btn" id="editArtistBtn" style="margin-top:10px;">Update</button>
+          <button class="btn danger" id="deleteArtistBtn" style="margin-top:10px; margin-left:10px;">Delete</button>
+        </div>
+
+        <h2 class="section-title">Manage Artworks</h2>
+        <div class="card">
+          <h3 style="color:var(--gold2);">Add Artwork</h3>
+          <div class="row">
+            <div class="col"><label>Title</label><input id="addArtworkTitle"/></div>
+            <div class="col"><label>Year Created</label><input id="addArtworkYearCreated" type="number"/></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Medium</label><input id="addArtworkMedium"/></div>
+            <div class="col"><label>Price</label><input id="addArtworkPrice" type="number" step="0.01"/></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Artist</label><select id="addArtworkArtistId"></select></div>
+            <div class="col"><label>Category</label><select id="addArtworkCategoryId"></select></div>
+          </div>
+          <button class="btn primary" id="addArtworkBtn" style="margin-top:10px;">Add</button>
+        </div>
+
+        <div class="card" style="margin-top:16px;">
+          <h3 style="color:var(--gold2);">Edit Artwork</h3>
+          <div class="row">
+            <div class="col" style="max-width:220px;"><label>Artwork ID</label><input id="editArtworkId" type="number"/></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Title (optional)</label><input id="editArtworkTitle"/></div>
+            <div class="col"><label>Price (optional)</label><input id="editArtworkPrice" type="number" step="0.01"/></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Medium (optional)</label><input id="editArtworkMedium"/></div>
+            <div class="col"><label>Year (optional)</label><input id="editArtworkYearCreated" type="number"/></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Artist (optional)</label><select id="editArtworkArtistId"></select></div>
+            <div class="col"><label>Category (optional)</label><select id="editArtworkCategoryId"></select></div>
+          </div>
+          <button class="btn" id="editArtworkBtn" style="margin-top:10px;">Update</button>
+          <button class="btn danger" id="deleteArtworkBtn" style="margin-top:10px; margin-left:10px;">Delete</button>
+        </div>
+
+        <h2 class="section-title">Manage Exhibitions</h2>
+        <div class="card">
+          <h3 style="color:var(--gold2);">Add Exhibition</h3>
+          <div class="row">
+            <div class="col"><label>Title</label><input id="addExTitle"/></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Start Date</label><input id="addExStartDate" type="date"/></div>
+            <div class="col"><label>End Date</label><input id="addExEndDate" type="date"/></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Theme</label><input id="addExTheme"/></div>
+            <div class="col"><label>Ticket Price</label><input id="addExTicketPrice" type="number" step="0.01"/></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Curator</label><select id="addExCuratorId"></select></div>
+          </div>
+          <button class="btn primary" id="addExBtn" style="margin-top:10px;">Add</button>
+        </div>
+
+        <div class="card" style="margin-top:16px;">
+          <h3 style="color:var(--gold2);">Edit Exhibition</h3>
+          <div class="row">
+            <div class="col" style="max-width:220px;"><label>Exhibition ID</label><input id="editExId" type="number"/></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Title (optional)</label><input id="editExTitle"/></div>
+            <div class="col"><label>Ticket Price (optional)</label><input id="editExTicketPrice" type="number" step="0.01"/></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Theme (optional)</label><input id="editExTheme"/></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Start Date (optional)</label><input id="editExStartDate" type="date"/></div>
+            <div class="col"><label>End Date (optional)</label><input id="editExEndDate" type="date"/></div>
+          </div>
+          <div class="row">
+            <div class="col"><label>Curator (optional)</label><select id="editExCuratorId"></select></div>
+          </div>
+          <button class="btn" id="editExBtn" style="margin-top:10px;">Update</button>
+          <button class="btn danger" id="deleteExBtn" style="margin-top:10px; margin-left:10px;">Delete</button>
+        </div>
+
+        <p id="adminMsg" style="margin-top:14px;"></p>
+      </div>
+    </div>
+
+    <script src="/app.js"></script>
+    <script>
+      function setMsg(id, msg, kind="ok"){
+        const el = document.getElementById(id);
+        el.textContent = msg;
+        el.className = kind === "danger" ? "danger" : (kind === "ok" ? "ok" : "muted");
+      }
+
+      function populateSelect(selectEl, items, valueKey, labelKey){
+        selectEl.innerHTML = "";
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = "-- Select --";
+        selectEl.appendChild(placeholder);
+        for (const it of items){
+          const opt = document.createElement("option");
+          opt.value = it[valueKey];
+          opt.textContent = it[labelKey];
+          selectEl.appendChild(opt);
+        }
+      }
+
+      function buildOptionalPayload(idsToFields, root){
+        // idsToFields: [{field, inputId}]
+        const payload = {};
+        for (const m of idsToFields){
+          const v = document.getElementById(m.inputId).value;
+          if (v !== "" && v !== null && v !== undefined){
+            if (m.transform) payload[m.field] = m.transform(v);
+            else payload[m.field] = v;
+          }
+        }
+        return payload;
+      }
+
+      async function loadReferenceData(){
+        const [artists, categories, curators] = await Promise.all([
+          apiFetch("/artists"),
+          apiFetch("/categories"),
+          apiFetch("/curators"),
+        ]);
+
+        populateSelect(document.getElementById("addArtworkArtistId"), artists, "artist_id", "name");
+        populateSelect(document.getElementById("addArtworkCategoryId"), categories, "category_id", "name");
+
+        populateSelect(document.getElementById("editArtworkArtistId"), artists, "artist_id", "name");
+        populateSelect(document.getElementById("editArtworkCategoryId"), categories, "category_id", "name");
+
+        populateSelect(document.getElementById("addExCuratorId"), curators, "curator_id", "name");
+        populateSelect(document.getElementById("editExCuratorId"), curators, "curator_id", "name");
+      }
+
+      async function login(){
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
+        try{
+          const resp = await apiFetch("/auth/login", {
+            method: "POST",
+            body: JSON.stringify({ username, password })
+          });
+          localStorage.setItem("jwt_token", resp.access_token);
+          document.getElementById("authMsg").textContent = "";
+          document.getElementById("authCard").style.display = "none";
+          document.getElementById("adminUI").style.display = "block";
+          document.getElementById("logoutBtn").style.display = "inline-block";
+          await loadReferenceData();
+          setMsg("adminMsg", "Login successful. Ready to manage data.", "ok");
+        }catch(e){
+          setMsg("authMsg", e.message, "danger");
+        }
+      }
+
+      function logout(){
+        localStorage.removeItem("jwt_token");
+        document.getElementById("adminUI").style.display = "none";
+        document.getElementById("authCard").style.display = "block";
+        document.getElementById("logoutBtn").style.display = "none";
+      }
+
+      function hasToken(){
+        return !!localStorage.getItem("jwt_token");
+      }
+
+      async function init(){
+        document.getElementById("loginBtn").addEventListener("click", login);
+        document.getElementById("logoutBtn").addEventListener("click", logout);
+
+        if (hasToken()){
+          document.getElementById("authCard").style.display = "none";
+          document.getElementById("adminUI").style.display = "block";
+          document.getElementById("logoutBtn").style.display = "inline-block";
+          await loadReferenceData();
+          setMsg("adminMsg", "Welcome back. Admin session restored.", "ok");
+        }
+
+        // Artists
+        document.getElementById("addArtistBtn").addEventListener("click", async ()=>{
+          const payload = {
+            name: document.getElementById("addArtistName").value.trim(),
+            nationality: document.getElementById("addArtistNationality").value.trim(),
+            birth_year: Number(document.getElementById("addArtistBirthYear").value),
+            bio: document.getElementById("addArtistBio").value.trim()
+          };
+          const resp = await apiFetch("/artists", { method:"POST", body: JSON.stringify(payload) });
+          setMsg("adminMsg", `Artist created (id=${resp.artist_id}).`, "ok");
+        });
+
+        document.getElementById("editArtistBtn").addEventListener("click", async ()=>{
+          const id = Number(document.getElementById("editArtistId").value);
+          const payload = buildOptionalPayload([
+            { field:"name", inputId:"editArtistName" },
+            { field:"nationality", inputId:"editArtistNationality" },
+            { field:"birth_year", inputId:"editArtistBirthYear", transform: v => Number(v) },
+            { field:"bio", inputId:"editArtistBio" },
+          ]);
+          await apiFetch(`/artists/${id}`, { method:"PUT", body: JSON.stringify(payload) });
+          setMsg("adminMsg", `Artist updated (id=${id}).`, "ok");
+        });
+
+        document.getElementById("deleteArtistBtn").addEventListener("click", async ()=>{
+          const id = Number(document.getElementById("editArtistId").value);
+          await apiFetch(`/artists/${id}`, { method:"DELETE" });
+          setMsg("adminMsg", `Artist deleted (id=${id}).`, "ok");
+        });
+
+        // Artworks
+        document.getElementById("addArtworkBtn").addEventListener("click", async ()=>{
+          const payload = {
+            title: document.getElementById("addArtworkTitle").value.trim(),
+            year_created: Number(document.getElementById("addArtworkYearCreated").value),
+            medium: document.getElementById("addArtworkMedium").value.trim(),
+            price: Number(document.getElementById("addArtworkPrice").value),
+            artist_id: Number(document.getElementById("addArtworkArtistId").value),
+            category_id: Number(document.getElementById("addArtworkCategoryId").value),
+          };
+          const resp = await apiFetch("/artworks", { method:"POST", body: JSON.stringify(payload) });
+          setMsg("adminMsg", `Artwork created (id=${resp.artwork_id}).`, "ok");
+        });
+
+        document.getElementById("editArtworkBtn").addEventListener("click", async ()=>{
+          const id = Number(document.getElementById("editArtworkId").value);
+          const payload = buildOptionalPayload([
+            { field:"title", inputId:"editArtworkTitle" },
+            { field:"price", inputId:"editArtworkPrice", transform:v=>Number(v) },
+            { field:"medium", inputId:"editArtworkMedium" },
+            { field:"year_created", inputId:"editArtworkYearCreated", transform:v=>Number(v) },
+            { field:"artist_id", inputId:"editArtworkArtistId", transform:v=>Number(v) },
+            { field:"category_id", inputId:"editArtworkCategoryId", transform:v=>Number(v) },
+          ]);
+          await apiFetch(`/artworks/${id}`, { method:"PUT", body: JSON.stringify(payload) });
+          setMsg("adminMsg", `Artwork updated (id=${id}).`, "ok");
+        });
+
+        document.getElementById("deleteArtworkBtn").addEventListener("click", async ()=>{
+          const id = Number(document.getElementById("editArtworkId").value);
+          await apiFetch(`/artworks/${id}`, { method:"DELETE" });
+          setMsg("adminMsg", `Artwork deleted (id=${id}).`, "ok");
+        });
+
+        // Exhibitions
+        document.getElementById("addExBtn").addEventListener("click", async ()=>{
+          const payload = {
+            title: document.getElementById("addExTitle").value.trim(),
+            start_date: document.getElementById("addExStartDate").value,
+            end_date: document.getElementById("addExEndDate").value,
+            theme: document.getElementById("addExTheme").value.trim(),
+            curator_id: Number(document.getElementById("addExCuratorId").value),
+            ticket_price: Number(document.getElementById("addExTicketPrice").value),
+          };
+          const resp = await apiFetch("/exhibitions", { method:"POST", body: JSON.stringify(payload) });
+          setMsg("adminMsg", `Exhibition created (id=${resp.exhibition_id}).`, "ok");
+        });
+
+        document.getElementById("editExBtn").addEventListener("click", async ()=>{
+          const id = Number(document.getElementById("editExId").value);
+          const payload = buildOptionalPayload([
+            { field:"title", inputId:"editExTitle" },
+            { field:"ticket_price", inputId:"editExTicketPrice", transform:v=>Number(v) },
+            { field:"theme", inputId:"editExTheme" },
+            { field:"start_date", inputId:"editExStartDate" },
+            { field:"end_date", inputId:"editExEndDate" },
+            { field:"curator_id", inputId:"editExCuratorId", transform:v=>Number(v) },
+          ]);
+          await apiFetch(`/exhibitions/${id}`, { method:"PUT", body: JSON.stringify(payload) });
+          setMsg("adminMsg", `Exhibition updated (id=${id}).`, "ok");
+        });
+
+        document.getElementById("deleteExBtn").addEventListener("click", async ()=>{
+          const id = Number(document.getElementById("editExId").value);
+          await apiFetch(`/exhibitions/${id}`, { method:"DELETE" });
+          setMsg("adminMsg", `Exhibition deleted (id=${id}).`, "ok");
+        });
+      }
+
+      init().catch(console.error);
+    </script>
+  </body>
+</html>
+

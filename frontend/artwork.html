@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>ART GALLERY - Artwork</title>
+    <link rel="stylesheet" href="/styles.css"/>
+  </head>
+  <body>
+    <div class="container">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo"></div>
+          <div>
+            <h1>Artwork Details</h1>
+            <p>Medium, price, and artist profile</p>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/">Home</a>
+          <a href="/exhibitions.html">Exhibitions</a>
+          <a href="/reports.html">Reports</a>
+        </nav>
+      </header>
+
+      <div id="artworkPanel" class="card" style="margin-top:16px;"></div>
+    </div>
+
+    <script src="/app.js"></script>
+    <script>
+      async function load(){
+        const id = getQueryParam("id");
+        if (!id) throw new Error("Missing artwork id");
+        const artwork = await apiFetch(`/artworks/${encodeURIComponent(id)}`);
+        const artist = await apiFetch(`/artists/${encodeURIComponent(artwork.artist_id)}`);
+
+        const el = document.getElementById("artworkPanel");
+        el.innerHTML = `
+          <h3>${artwork.title}</h3>
+          <p><span class="muted">Artist:</span> <a href="/artist.html?id=${artist.artist_id}">${artist.name}</a></p>
+          <p><span class="muted">Year:</span> ${artwork.year_created}</p>
+          <p><span class="muted">Medium:</span> ${artwork.medium}</p>
+          <p><span class="muted">Price:</span> ${formatMoney(artwork.price)}</p>
+          <p><span class="muted">Sold Count:</span> ${artwork.sold_count}</p>
+          <div style="margin-top:14px; color:rgba(242,242,245,0.92);">
+            <h4 style="margin:0 0 8px; color: var(--gold2); font-size:14px;">Artist Bio</h4>
+            <p style="margin:0; color: var(--muted); font-size:13px;">${artist.bio}</p>
+          </div>
+        `;
+      }
+
+      load().catch(console.error);
+    </script>
+  </body>
+</html>
+

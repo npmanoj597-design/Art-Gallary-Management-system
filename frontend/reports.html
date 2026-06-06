@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>ART GALLERY - Reports</title>
+    <link rel="stylesheet" href="/styles.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo"></div>
+          <div>
+            <h1>Reports</h1>
+            <p>Revenue & visitor analytics</p>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/">Home</a>
+          <a href="/exhibitions.html">Exhibitions</a>
+          <a href="/admin.html">Admin</a>
+        </nav>
+      </header>
+
+      <h2 class="section-title">Top Artworks by Revenue</h2>
+      <div class="card">
+        <canvas id="topArtworksChart" height="100"></canvas>
+      </div>
+
+      <h2 class="section-title">Visitor Attendance</h2>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Visitor</th>
+              <th>Membership</th>
+              <th>Tickets</th>
+              <th>Total Spent</th>
+            </tr>
+          </thead>
+          <tbody id="visitorRows"></tbody>
+        </table>
+      </div>
+
+      <h2 class="section-title">Exhibition Summary</h2>
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Exhibition</th>
+              <th>Curator</th>
+              <th>Tickets</th>
+              <th>Revenue</th>
+            </tr>
+          </thead>
+          <tbody id="exhibitionRows"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script src="/app.js"></script>
+    <script>
+      async function loadChartsAndTables(){
+        const top = await apiFetch("/reports/top-artworks?limit=8");
+        const labels = top.map(x => x.title);
+        const revenue = top.map(x => Number(x.total_revenue));
+
+        const ctx = document.getElementById("topArtworksChart").getContext("2d");
+        new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels,
+            datasets: [{
+              label: "Revenue",
+              data: revenue,
+              backgroundColor: "rgba(212,175,55,0.35)",
+              borderColor: "rgba(212,175,55,0.9)",
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { labels: { color: "#f2f2f5" } } },
+            scales: {
+              x: { ticks: { color: "#b7b7c2" } },
+              y: { ticks: { color: "#b7b7c2" } }
+            }
+          }
+        });
+
+        const visitors = await apiFetch("/reports/visitor-attendance");
+        const visitorRows = document.getElementById("visitorRows");
+        visitorRows.innerHTML = "";
+        for (const v of visitors.slice(0, 12)){
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${v.visitor_name}</td>
+            <td>${v.membership_type}</td>
+            <td>${v.tickets_purchased}</td>
+            <td>${formatMoney(v.total_spent)}</td>
+          `;
+          visitorRows.appendChild(tr);
+        }
+
+        const exSummary = await apiFetch("/reports/exhibition-summary");
+        const exhibitionRows = document.getElementById("exhibitionRows");
+        exhibitionRows.innerHTML = "";
+        for (const ex of exSummary){
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${ex.title}</td>
+            <td>${ex.curator_name || "-"}</td>
+            <td>${ex.ticket_count}</td>
+            <td>${formatMoney(ex.total_ticket_revenue)}</td>
+          `;
+          exhibitionRows.appendChild(tr);
+        }
+      }
+
+      loadChartsAndTables().catch(console.error);
+    </script>
+  </body>
+</html>
+

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>ART GALLERY - Exhibitions</title>
+    <link rel="stylesheet" href="/styles.css"/>
+  </head>
+  <body>
+    <div class="container">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo"></div>
+          <div>
+            <h1>Exhibitions</h1>
+            <p>Filter by date, explore artwork grids</p>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/">Home</a>
+          <a href="/reports.html">Reports</a>
+          <a href="/admin.html">Admin</a>
+        </nav>
+      </header>
+
+      <div class="row" style="margin-top:16px;">
+        <div class="col">
+          <label>From (YYYY-MM-DD)</label>
+          <input id="fromDate" type="date"/>
+        </div>
+        <div class="col">
+          <label>To (YYYY-MM-DD)</label>
+          <input id="toDate" type="date"/>
+        </div>
+        <div class="col" style="max-width:200px; align-self:flex-end;">
+          <button class="btn primary" id="applyBtn" style="width:100%;">Apply</button>
+        </div>
+      </div>
+
+      <h2 class="section-title">Exhibition List</h2>
+      <div id="exhibitionsGrid" class="grid cols-3"></div>
+    </div>
+
+    <script src="/app.js"></script>
+    <script>
+      async function loadExhibitions(){
+        const fromDate = document.getElementById("fromDate").value;
+        const toDate = document.getElementById("toDate").value;
+        let q = [];
+        if (fromDate) q.push(`from_date=${encodeURIComponent(fromDate)}`);
+        if (toDate) q.push(`to_date=${encodeURIComponent(toDate)}`);
+        const url = q.length ? `/exhibitions?${q.join("&")}` : "/exhibitions";
+        const items = await apiFetch(url);
+
+        const grid = document.getElementById("exhibitionsGrid");
+        grid.innerHTML = "";
+        for (const ex of items){
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <h3>${ex.title}</h3>
+            <p><span class="muted">Theme:</span> ${ex.theme}</p>
+            <p><span class="muted">Dates:</span> ${ex.start_date} to ${ex.end_date}</p>
+            <p><span class="muted">Ticket:</span> ${formatMoney(ex.ticket_price)}</p>
+            <a class="btn" href="/exhibition_artworks.html?id=${ex.exhibition_id}" style="display:inline-block; margin-top:10px;">View artworks</a>
+          `;
+          grid.appendChild(card);
+        }
+      }
+
+      document.getElementById("applyBtn").addEventListener("click", ()=>loadExhibitions().catch(console.error));
+      loadExhibitions().catch(console.error);
+    </script>
+  </body>
+</html>
+

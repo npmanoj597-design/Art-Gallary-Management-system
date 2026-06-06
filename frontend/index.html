@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>ART GALLERY - Home</title>
+    <link rel="stylesheet" href="/styles.css"/>
+  </head>
+  <body>
+    <div class="container">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo"></div>
+          <div>
+            <h1>Art Gallery Management System</h1>
+            <p>Curated exhibitions, artworks, tickets & reports</p>
+          </div>
+        </div>
+        <nav class="nav" aria-label="Primary navigation">
+          <a href="/">Home</a>
+          <a href="/exhibitions.html">Exhibitions</a>
+          <a href="/reports.html">Reports</a>
+          <a href="/admin.html">Admin</a>
+        </nav>
+      </header>
+
+      <section>
+        <h2 class="section-title">Featured Exhibitions</h2>
+        <div id="featuredExhibitions" class="grid cols-3"></div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Top Artworks</h2>
+        <div id="topArtworks" class="grid cols-4"></div>
+      </section>
+
+      <footer style="margin-top:28px; color:rgba(183,183,194,0.9); font-size:12px;">
+        Data driven by your backend API.
+      </footer>
+    </div>
+
+    <script src="/app.js"></script>
+    <script>
+      async function loadFeatured(){
+        const res = await apiFetch("/reports/exhibition-summary");
+        const container = document.getElementById("featuredExhibitions");
+        container.innerHTML = "";
+
+        const items = res.slice(0, 6);
+        for (const ex of items){
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <h3>${ex.title}</h3>
+            <p><span class="muted">Theme:</span> ${ex.theme}</p>
+            <p><span class="muted">Dates:</span> ${ex.start_date} to ${ex.end_date}</p>
+            <p><span class="muted">Tickets:</span> ${ex.ticket_count} (revenue ${formatMoney(ex.total_ticket_revenue)})</p>
+            <a class="btn primary" href="/exhibitions.html?id=${ex.exhibition_id}" style="display:inline-block; margin-top:10px;">View artworks</a>
+          `;
+          container.appendChild(card);
+        }
+      }
+
+      async function loadTopArtworks(){
+        const items = await apiFetch("/reports/top-artworks?limit=8");
+        const container = document.getElementById("topArtworks");
+        container.innerHTML = "";
+        for (const a of items){
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <h3>${a.title}</h3>
+            <p><span class="muted">Artist:</span> ${a.artist_name}</p>
+            <p><span class="muted">Category:</span> ${a.category_name}</p>
+            <p><span class="muted">Sales:</span> ${a.sale_count}</p>
+            <p><span class="muted">Revenue:</span> ${formatMoney(a.total_revenue)}</p>
+            <a class="btn" href="/artwork.html?id=${a.artwork_id}" style="display:inline-block; margin-top:10px;">Details</a>
+          `;
+          container.appendChild(card);
+        }
+      }
+
+      loadFeatured().catch(console.error);
+      loadTopArtworks().catch(console.error);
+    </script>
+  </body>
+</html>
+
