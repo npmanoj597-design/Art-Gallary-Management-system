@@ -4,6 +4,8 @@ Full-stack project built with:
 - Backend: Python + FastAPI
 - Database: PostgreSQL
 - Frontend: Vanilla HTML/CSS/JS (served by FastAPI)
+  ## Live Demo
+https://art-gallary-management-system.onrender.com
 
 ## Features
 - 3NF normalized schema with required tables
