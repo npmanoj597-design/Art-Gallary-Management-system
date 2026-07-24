@@ -82,9 +82,10 @@ def book_ticket(payload: TicketBookRequest):
         cur = conn.cursor()
         try:
             cur.execute("BEGIN;")
-            params = [payload.visitor_id, payload.exhibition_id, payload.seat_type, None]  # [IN,IN,IN,INOUT]
+            params = [payload.visitor_id, payload.exhibition_id, payload.seat_type]
             cur.callproc("bookticket", params)
-            ticket_id = params[3]
+            res = cur.fetchone()
+            ticket_id = res[0] if res is not None else None
 
             cur.execute("COMMIT;")
         except Exception as e:

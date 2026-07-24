@@ -103,9 +103,11 @@ def artist_total_revenue(artist_id: int, db: Session = Depends(get_db)):
     # Stored procedure call: GetArtistRevenue artist_id -> OUT total_revenue
     with get_raw_connection() as conn:
         cur = conn.cursor()
-        params = [artist_id, None]  # [IN, OUT]
+        params = [artist_id]  # callproc for a function: only IN params
         cur.callproc("getartistrevenue", params)
-        total_revenue_proc = params[1]
+        # callproc with a function leaves the result in the cursor
+        res = cur.fetchone()
+        total_revenue_proc = res[0] if res is not None else 0
 
     return {
         "artist_id": row["artist_id"],
